@@ -61,9 +61,18 @@ class App extends Component {
 
   buyTokens = (etherAmount) => {
     this.setState({ loading: true })
-    this.state.ethSwap.methods.buyTokens().send({ value: etherAmount, from: this.state.account }).on('transactionHash', (hash) => {
+    console.time('BUYTOKEN')
+    console.time('Confirm')
+    this.state.ethSwap.methods.buyTokens().send({ value: etherAmount, from: this.state.account })
+    .on('transactionHash', (hash) => {
       this.setState({ loading: false })
+      console.timeEnd('Confirm')
+    }).on('error',(e)=>{
+      this.setState({ loading: false })
+      console.log("Hey",e);
+      alert("İşlem tamamlanmadı")
     })
+    console.timeEnd('BUYTOKEN')
   }
 
   sellTokens = (tokenAmount) => {
